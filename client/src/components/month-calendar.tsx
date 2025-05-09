@@ -81,9 +81,11 @@ export default function MonthCalendar({
           const allAvailable = isAllAvailable(dateString);
           
           return (
-            <div
+            <button
               key={dateString}
-              className={`calendar-day aspect-square ${available ? 'bg-available' : 'bg-unavailable'} rounded-md cursor-pointer flex items-center justify-center shadow-sm`}
+              type="button" 
+              disabled={false}
+              className={`calendar-day aspect-square ${available ? 'bg-available' : 'bg-unavailable'} rounded-md cursor-pointer flex items-center justify-center shadow-sm relative`}
               onClick={() => onToggleAvailability(dateString)}
             >
               <span className="text-white font-medium">{day}</span>
@@ -92,7 +94,7 @@ export default function MonthCalendar({
                   <Star className="h-4 w-4" />
                 </div>
               )}
-            </div>
+            </button>
           );
         })}
       </div>

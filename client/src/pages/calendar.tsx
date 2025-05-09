@@ -64,6 +64,14 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
   
   const handleToggleAvailability = async (date: string) => {
     try {
+      // Show loading toast
+      const toastId = Math.random().toString();
+      toast({
+        id: toastId,
+        title: "Updating...",
+        description: "Saving your availability",
+      });
+      
       const response = await fetch('/api/availability/toggle', {
         method: 'POST',
         headers: {
@@ -76,9 +84,27 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
         throw new Error('Failed to update availability');
       }
       
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ['/api/availability/dates'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/users'] });
+      // Wait for the response to process before continuing
+      await response.json();
+      
+      // Invalidate and refetch queries to refresh data
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['/api/availability/dates'] }),
+        queryClient.invalidateQueries({ queryKey: ['/api/users'] })
+      ]);
+      
+      // Wait for the queries to be refetched
+      await queryClient.refetchQueries({ 
+        queryKey: ['/api/availability/dates', currentMonthDates.start, nextMonthDates.end],
+        exact: true 
+      });
+      
+      // Dismiss the loading toast
+      toast({
+        id: toastId,
+        title: "Success",
+        description: "Availability updated",
+      });
       
     } catch (error) {
       console.error('Error toggling availability:', error);
