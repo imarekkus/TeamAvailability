@@ -166,6 +166,33 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
                 <span className="text-sm">Everyone Available</span>
               </div>
             </div>
+            
+            <div className="mb-6 border-t pt-4 mt-4">
+              <h3 className="font-medium mb-2 text-gray-700">Others' Availability Level (when you're not available):</h3>
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 availability-none rounded"></div>
+                  <span className="text-xs">None (0%)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 availability-low rounded"></div>
+                  <span className="text-xs">Low (1-30%)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 availability-medium rounded"></div>
+                  <span className="text-xs">Medium (30-70%)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 availability-high rounded"></div>
+                  <span className="text-xs">High (70-99%)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 availability-full rounded"></div>
+                  <span className="text-xs">Full (100%)</span>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">The number in top-right of each day shows how many people are available.</p>
+            </div>
 
             <p className="text-gray-600 mb-6">Click on a day to mark your availability. Days where everyone is available will be highlighted.</p>
             

@@ -53,9 +53,96 @@ export default function MonthCalendar({
     return availability.allAvailable;
   };
   
+  // Get a count of all unique users from the availability data
+  const getUserCount = () => {
+    // Create a Set to track unique user IDs
+    const uniqueUserIds = new Set<number>();
+    
+    // Process all the availability data to find all unique users
+    availabilityData.forEach(dateData => {
+      dateData.availableUsers.forEach(user => {
+        uniqueUserIds.add(user.id);
+      });
+    });
+    
+    // Return the count of unique users, or at least 1 to avoid division by zero
+    return Math.max(uniqueUserIds.size, 1);
+  };
+  
+  // Calculate total number of users in the system
+  const totalUsers = getUserCount();
+    
+  // Determine the appropriate availability class based on percentage of available users
+  const getAvailabilityClass = (date: string) => {
+    const availability = dateAvailabilityMap.get(date);
+    const userAvailable = isUserAvailable(date);
+    const allAvailable = isAllAvailable(date);
+    
+    // If this user is not available, but others are
+    if (!userAvailable && availability && availability.availableUsers.length > 0) {
+      const availableCount = availability.availableUsers.length;
+      const availabilityPercentage = availableCount / totalUsers;
+      
+      if (availabilityPercentage === 1) return 'availability-full';
+      if (availabilityPercentage >= 0.7) return 'availability-high';
+      if (availabilityPercentage >= 0.3) return 'availability-medium';
+      if (availabilityPercentage > 0) return 'availability-low';
+      return 'availability-none';
+    }
+    
+    // Standard coloring for the current user's availability
+    if (allAvailable) return 'bg-all-available';
+    if (userAvailable) {
+      // If the user is available, check if there are others also available
+      if (availability && availability.availableUsers.length > 1) {
+        // Show a slightly different shade when the user is available and others are too
+        return 'bg-available';
+      } else {
+        // Just the current user is available
+        return 'bg-available';
+      }
+    }
+    
+    // Current user is not available
+    return 'bg-unavailable';
+  };
+  
   // Format a day number to a full date string
   const formatDateString = (day: number) => {
     return `${dates.year}-${String(dates.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  };
+  
+  // Generate a helpful tooltip text for each day
+  const getTooltipText = (date: string) => {
+    const availability = dateAvailabilityMap.get(date);
+    const userAvailable = isUserAvailable(date);
+    
+    if (!availability) return 'No availability data';
+    
+    const availableCount = availability.availableUsers.length;
+    const availabilityPercentage = Math.round((availableCount / totalUsers) * 100);
+    
+    const availableNames = availability.availableUsers
+      .map(user => user.username)
+      .join(', ');
+      
+    if (availability.allAvailable) {
+      return `Everyone is available! (${availableCount} people): ${availableNames}`;
+    }
+    
+    if (availableCount === 0) {
+      return 'Nobody is available on this day';
+    }
+    
+    if (userAvailable) {
+      if (availableCount === 1) {
+        return 'Only you are available on this day';
+      } else {
+        return `You and ${availableCount - 1} others are available (${availabilityPercentage}%): ${availableNames}`;
+      }
+    }
+    
+    return `${availableCount} people are available (${availabilityPercentage}%): ${availableNames}`;
   };
   
   return (
@@ -85,10 +172,16 @@ export default function MonthCalendar({
               key={dateString}
               type="button" 
               disabled={false}
-              className={`calendar-day aspect-square ${allAvailable ? 'bg-all-available' : available ? 'bg-available' : 'bg-unavailable'} rounded-md cursor-pointer flex items-center justify-center shadow-sm relative`}
+              className={`calendar-day aspect-square ${getAvailabilityClass(dateString)} rounded-md cursor-pointer flex items-center justify-center shadow-sm relative`}
               onClick={() => onToggleAvailability(dateString)}
+              title={getTooltipText(dateString)}
             >
               <span className="text-white font-medium">{day}</span>
+              {dateAvailabilityMap.get(dateString) && dateAvailabilityMap.get(dateString)!.availableUsers.length > 0 && (
+                <span className="text-white/80 text-[10px] absolute top-1 right-1 font-medium">
+                  {dateAvailabilityMap.get(dateString)!.availableUsers.length}
+                </span>
+              )}
               {allAvailable && (
                 <div className="star-icon">
                   <Star className="h-3 w-3" />

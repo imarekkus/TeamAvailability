@@ -89,6 +89,27 @@
   background-color: hsl(var(--all-available));
 }
 
+/* Availability levels styling */
+.availability-none {
+  background-color: hsl(var(--unavailable));
+}
+
+.availability-low {
+  background-color: hsl(210, 100%, 25%);
+}
+
+.availability-medium {
+  background-color: hsl(210, 100%, 40%);
+}
+
+.availability-high {
+  background-color: hsl(210, 100%, 55%);
+}
+
+.availability-full {
+  background-color: hsl(var(--all-available));
+}
+
 .star-icon {
   position: absolute;
   bottom: 2px;
