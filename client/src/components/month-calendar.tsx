@@ -85,13 +85,13 @@ export default function MonthCalendar({
               key={dateString}
               type="button" 
               disabled={false}
-              className={`calendar-day aspect-square ${available ? 'bg-available' : 'bg-unavailable'} rounded-md cursor-pointer flex items-center justify-center shadow-sm relative`}
+              className={`calendar-day aspect-square ${allAvailable ? 'bg-all-available' : available ? 'bg-available' : 'bg-unavailable'} rounded-md cursor-pointer flex items-center justify-center shadow-sm relative`}
               onClick={() => onToggleAvailability(dateString)}
             >
               <span className="text-white font-medium">{day}</span>
               {allAvailable && (
-                <div className="absolute inset-0 flex items-center justify-center text-white">
-                  <Star className="h-4 w-4" />
+                <div className="star-icon">
+                  <Star className="h-6 w-6" />
                 </div>
               )}
             </button>

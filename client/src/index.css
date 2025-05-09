@@ -27,6 +27,7 @@
   /* Custom colors for the calendar */
   --available: 142.1 70.6% 45.3%;
   --unavailable: 0 0% 11.8%;
+  --all-available: 47 93% 53%;
 }
 
 .dark {
@@ -54,6 +55,7 @@
   /* Custom colors for the calendar - dark mode */
   --available: 142.1 70.6% 45.3%;
   --unavailable: 0 0% 11.8%;
+  --all-available: 47 93% 53%;
 }
 
 @layer base {
@@ -81,4 +83,18 @@
 
 .bg-unavailable {
   background-color: hsl(var(--unavailable));
+}
+
+.bg-all-available {
+  background-color: hsl(var(--all-available));
+}
+
+.star-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
 }

@@ -65,9 +65,7 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
   const handleToggleAvailability = async (date: string) => {
     try {
       // Show loading toast
-      const toastId = Math.random().toString();
       toast({
-        id: toastId,
         title: "Updating...",
         description: "Saving your availability",
       });
@@ -97,13 +95,6 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
       await queryClient.refetchQueries({ 
         queryKey: ['/api/availability/dates', currentMonthDates.start, nextMonthDates.end],
         exact: true 
-      });
-      
-      // Dismiss the loading toast
-      toast({
-        id: toastId,
-        title: "Success",
-        description: "Availability updated",
       });
       
     } catch (error) {
@@ -146,7 +137,7 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
                 <span className="text-sm">Available (You)</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-available rounded relative flex items-center justify-center">
+                <div className="w-4 h-4 bg-all-available rounded relative flex items-center justify-center">
                   <Star className="h-3 w-3 text-white" />
                 </div>
                 <span className="text-sm">Everyone Available</span>
