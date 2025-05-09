@@ -102,7 +102,8 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
                 <Button 
                   variant="ghost" 
                   className="text-sm text-gray-600 hover:text-gray-900"
-                  onClick={onLogout}
+                  onClick={() => onLogout()}
+                  type="button"
                 >
                   Logout
                 </Button>

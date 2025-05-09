@@ -15,7 +15,7 @@ interface MonthCalendarProps {
   onToggleAvailability: (date: string) => void;
 }
 
-const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export default function MonthCalendar({
   monthName,
