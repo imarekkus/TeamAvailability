@@ -32,6 +32,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ message: "Failed to fetch users" });
     }
   });
+  
+  app.delete("/api/users/:id", async (req: Request, res: Response) => {
+    try {
+      const userId = parseInt(req.params.id);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: "Invalid user ID" });
+      }
+      
+      await storage.deleteUser(userId);
+      return res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      return res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
 
   // Availability routes
   app.post("/api/availability", async (req: Request, res: Response) => {

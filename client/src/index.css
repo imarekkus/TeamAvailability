@@ -25,9 +25,9 @@
   --radius: 0.5rem;
   
   /* Custom colors for the calendar */
-  --available: 142.1 70.6% 45.3%;
+  --available: 210 100% 50%;
   --unavailable: 0 0% 11.8%;
-  --all-available: 47 93% 53%;
+  --all-available: 142.1 70.6% 45.3%;
 }
 
 .dark {
@@ -53,9 +53,9 @@
   --radius: 0.5rem;
   
   /* Custom colors for the calendar - dark mode */
-  --available: 142.1 70.6% 45.3%;
+  --available: 210 100% 50%;
   --unavailable: 0 0% 11.8%;
-  --all-available: 47 93% 53%;
+  --all-available: 142.1 70.6% 45.3%;
 }
 
 @layer base {
@@ -91,10 +91,11 @@
 
 .star-icon {
   position: absolute;
-  inset: 0;
+  bottom: 2px;
+  right: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.25rem;
+  font-size: 0.75rem;
 }

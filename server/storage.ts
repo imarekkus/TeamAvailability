@@ -8,6 +8,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  deleteUser(id: number): Promise<void>;
   
   // Availability management
   getAvailabilityByUser(userId: number): Promise<Availability[]>;
@@ -50,6 +51,18 @@ export class DatabaseStorage implements IStorage {
       .returning();
     
     return user;
+  }
+  
+  async deleteUser(id: number): Promise<void> {
+    // First delete all availability records for this user
+    await db
+      .delete(availability)
+      .where(eq(availability.userId, id));
+    
+    // Then delete the user
+    await db
+      .delete(users)
+      .where(eq(users.id, id));
   }
 
   async getAvailabilityByUser(userId: number): Promise<Availability[]> {

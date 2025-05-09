@@ -91,7 +91,7 @@ export default function MonthCalendar({
               <span className="text-white font-medium">{day}</span>
               {allAvailable && (
                 <div className="star-icon">
-                  <Star className="h-6 w-6" />
+                  <Star className="h-3 w-3" />
                 </div>
               )}
             </button>

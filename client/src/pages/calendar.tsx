@@ -63,13 +63,36 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
   }, [error, toast]);
   
   const handleToggleAvailability = async (date: string) => {
+    // Find the date in the existing availability data to allow for optimistic updates
+    const existingData = availabilityData || [];
+    const dateData = existingData.find(d => d.date === date);
+    const isCurrentlyAvailable = dateData?.availableUsers.some(u => u.id === user.id) || false;
+    
+    // Optimistically update local state
+    const updatedAvailabilityData = existingData.map(d => {
+      if (d.date === date) {
+        // If user is already available, remove them
+        const updatedUsers = isCurrentlyAvailable 
+          ? d.availableUsers.filter(u => u.id !== user.id)
+          : [...d.availableUsers, user];
+        
+        return {
+          ...d,
+          availableUsers: updatedUsers,
+          allAvailable: updatedUsers.length === (users?.length || 0) && (users?.length || 0) > 0
+        };
+      }
+      return d;
+    });
+    
+    // Update the optimistic view in queryClient
+    queryClient.setQueryData(
+      ['/api/availability/dates', currentMonthDates.start, nextMonthDates.end], 
+      updatedAvailabilityData
+    );
+    
     try {
-      // Show loading toast
-      toast({
-        title: "Updating...",
-        description: "Saving your availability",
-      });
-      
+      // Make the API call in the background
       const response = await fetch('/api/availability/toggle', {
         method: 'POST',
         headers: {
@@ -85,20 +108,20 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
       // Wait for the response to process before continuing
       await response.json();
       
-      // Invalidate and refetch queries to refresh data
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['/api/availability/dates'] }),
-        queryClient.invalidateQueries({ queryKey: ['/api/users'] })
-      ]);
-      
-      // Wait for the queries to be refetched
-      await queryClient.refetchQueries({ 
-        queryKey: ['/api/availability/dates', currentMonthDates.start, nextMonthDates.end],
-        exact: true 
-      });
+      // Quietly refresh data in the background 
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['/api/availability/dates'] });
+        queryClient.invalidateQueries({ queryKey: ['/api/users'] });
+      }, 500);
       
     } catch (error) {
       console.error('Error toggling availability:', error);
+      
+      // Revert optimistic update
+      queryClient.invalidateQueries({ 
+        queryKey: ['/api/availability/dates', currentMonthDates.start, nextMonthDates.end]
+      });
+      
       toast({
         title: "Error",
         description: "Failed to update your availability. Please try again.",
