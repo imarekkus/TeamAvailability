@@ -15,6 +15,7 @@ export interface IStorage {
   getAvailabilityByDate(date: string): Promise<Availability[]>;
   setAvailability(data: InsertAvailability): Promise<Availability>;
   toggleAvailability(userId: number, date: string): Promise<Availability>;
+  cleanupPastMonthData(): Promise<void>;
   
   // Aggregated data
   getUsersWithAvailabilityCounts(): Promise<UserWithAvailabilityCount[]>;
@@ -63,6 +64,23 @@ export class DatabaseStorage implements IStorage {
     await db
       .delete(users)
       .where(eq(users.id, id));
+  }
+  
+  async cleanupPastMonthData(): Promise<void> {
+    // Get the first day of the current month
+    const today = new Date();
+    const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    try {
+      // Delete all availability records from past months
+      await db
+        .delete(availability)
+        .where(sql`DATE(${availability.date}) < ${firstDayOfCurrentMonth.toISOString().split('T')[0]}`);
+      
+      console.log(`Cleaned up availability data from before ${firstDayOfCurrentMonth.toISOString().split('T')[0]}`);
+    } catch (error) {
+      console.error("Error cleaning up past month data:", error);
+    }
   }
 
   async getAvailabilityByUser(userId: number): Promise<Availability[]> {

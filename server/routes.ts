@@ -4,6 +4,30 @@ import { storage } from "./storage";
 import { insertUserSchema, insertAvailabilitySchema } from "@shared/schema";
 import { fromZodError } from "zod-validation-error";
 
+// Function to schedule the monthly cleanup
+function scheduleMonthlyCleanup() {
+  const now = new Date();
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const timeUntilNextMonth = nextMonth.getTime() - now.getTime();
+  
+  console.log(`Scheduling cleanup for ${nextMonth.toISOString()}`);
+  
+  // Schedule the cleanup for the first day of the next month
+  setTimeout(async () => {
+    try {
+      console.log("Running monthly cleanup of past availability data");
+      await storage.cleanupPastMonthData();
+      
+      // Schedule the next cleanup
+      scheduleMonthlyCleanup();
+    } catch (error) {
+      console.error("Error during scheduled cleanup:", error);
+      // Still reschedule even if there was an error
+      scheduleMonthlyCleanup();
+    }
+  }, timeUntilNextMonth);
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // User routes
   app.post("/api/users", async (req: Request, res: Response) => {
@@ -98,6 +122,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Setup monthly cleanup process and run an initial cleanup
+  try {
+    // Run an initial cleanup when the server starts
+    storage.cleanupPastMonthData().then(() => {
+      console.log("Initial past data cleanup completed");
+      
+      // Schedule recurring monthly cleanups
+      scheduleMonthlyCleanup();
+    }).catch(err => {
+      console.error("Error during initial data cleanup:", err);
+      // Still schedule the recurring cleanup even if initial cleanup fails
+      scheduleMonthlyCleanup();
+    });
+  } catch (error) {
+    console.error("Error setting up data cleanup:", error);
+  }
+  
   const httpServer = createServer(app);
   return httpServer;
 }
