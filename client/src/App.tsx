@@ -40,20 +40,13 @@ function Router() {
 
 function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <SomeComponent />
-      {/* other components */}
-    </div>
-  );
-}
-
-
-function App() {
-  return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Router />
+        <div className="relative min-h-screen bg-background text-foreground">
+          <ThemeToggle className="absolute top-4 right-4" />
+          <Router />
+        </div>
       </TooltipProvider>
     </QueryClientProvider>
   );
