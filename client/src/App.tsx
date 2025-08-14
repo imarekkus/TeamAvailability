@@ -8,7 +8,7 @@ import LoginPage from "@/pages/login";
 import CalendarPage from "@/pages/calendar";
 import { useState } from "react";
 import { User } from "@shared/schema";
-import ThemeToggle from "./components/ThemeToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 
 function Router() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
