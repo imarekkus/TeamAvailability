@@ -8,6 +8,7 @@ import LoginPage from "@/pages/login";
 import CalendarPage from "@/pages/calendar";
 import { useState } from "react";
 import { User } from "@shared/schema";
+import ThemeToggle from "./components/ThemeToggle";
 
 function Router() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -35,6 +36,17 @@ function Router() {
     </Switch>
   );
 }
+
+
+function App() {
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <SomeComponent />
+      {/* other components */}
+    </div>
+  );
+}
+
 
 function App() {
   return (
