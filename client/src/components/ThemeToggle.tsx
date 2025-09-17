@@ -1,17 +1,27 @@
 import { Button } from "@/components/ui/button";
 import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 
-interface ThemeToggleProps {
-  isDark: boolean;
-  setIsDark: (val: boolean) => void;
-}
+export default function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
+  
+  const toggleTheme = () => {
+    if (theme === "light") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  };
 
-export default function ThemeToggle({ isDark, setIsDark }: ThemeToggleProps) {
+  // Determine if we're in dark mode (considering system preference)
+  const isDark = theme === "dark" || 
+    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
   return (
     <Button
       variant="outline"
       size="icon"
-      onClick={() => setIsDark(!isDark)}
+      onClick={toggleTheme}
       className="rounded-full"
     >
       {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}

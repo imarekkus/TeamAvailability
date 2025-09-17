@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { User } from "@shared/schema";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface LoginPageProps {
   onLogin: (user: User) => void;
@@ -51,11 +52,14 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <Card className="w-full max-w-md">
         <CardContent className="pt-6">
-          <h1 className="text-2xl font-bold text-center mb-6">Availability Calendar</h1>
-          <p className="text-gray-600 mb-6 text-center">Enter your name to continue</p>
+          <h1 className="text-2xl font-bold text-center mb-6 text-foreground">Availability Calendar</h1>
+          <p className="text-muted-foreground mb-6 text-center">Enter your name to continue</p>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1">

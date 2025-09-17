@@ -6,6 +6,7 @@ import { User, DateAvailability } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import MonthCalendar from "@/components/month-calendar";
 import UserList from "@/components/user-list";
+import ThemeToggle from "@/components/ThemeToggle";
 import { getMonthRange } from "@/lib/calendar-utils";
 import { Star } from "lucide-react";
 
@@ -131,17 +132,18 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
   };
   
   return (
-    <div className="min-h-screen p-4 bg-gray-50">
+    <div className="min-h-screen p-4 bg-background">
       <div className="max-w-6xl mx-auto">
         <Card className="mb-6">
           <CardContent className="p-6">
             <div className="flex flex-wrap items-center justify-between mb-6">
-              <h1 className="text-2xl font-bold">Availability Calendar</h1>
+              <h1 className="text-2xl font-bold text-foreground">Availability Calendar</h1>
               <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium">Welcome, {user.username}</span>
+                <ThemeToggle />
+                <span className="text-sm font-medium text-foreground">Welcome, {user.username}</span>
                 <Button 
                   variant="ghost" 
-                  className="text-sm text-gray-600 hover:text-gray-900"
+                  className="text-sm text-muted-foreground hover:text-foreground"
                   onClick={() => onLogout()}
                   type="button"
                 >
@@ -153,48 +155,48 @@ export default function CalendarPage({ user, onLogout }: CalendarPageProps) {
             <div className="mb-4 flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-unavailable rounded"></div>
-                <span className="text-sm">Unavailable</span>
+                <span className="text-sm text-foreground">Unavailable</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-available rounded"></div>
-                <span className="text-sm">Available (You)</span>
+                <span className="text-sm text-foreground">Available (You)</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-all-available rounded relative flex items-center justify-center">
                   <Star className="h-3 w-3 text-white" />
                 </div>
-                <span className="text-sm">Everyone Available</span>
+                <span className="text-sm text-foreground">Everyone Available</span>
               </div>
             </div>
             
             <div className="mb-6 border-t pt-4 mt-4">
-              <h3 className="font-medium mb-2 text-gray-700">Others' Availability Level (when you're not available):</h3>
+              <h3 className="font-medium mb-2 text-foreground">Others' Availability Level (when you're not available):</h3>
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 availability-none rounded"></div>
-                  <span className="text-xs">None (0%)</span>
+                  <span className="text-xs text-muted-foreground">None (0%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 availability-low rounded"></div>
-                  <span className="text-xs">Low (1-30%)</span>
+                  <span className="text-xs text-muted-foreground">Low (1-30%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 availability-medium rounded"></div>
-                  <span className="text-xs">Medium (30-70%)</span>
+                  <span className="text-xs text-muted-foreground">Medium (30-70%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 availability-high rounded"></div>
-                  <span className="text-xs">High (70-99%)</span>
+                  <span className="text-xs text-muted-foreground">High (70-99%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 availability-full rounded"></div>
-                  <span className="text-xs">Full (100%)</span>
+                  <span className="text-xs text-muted-foreground">Full (100%)</span>
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">The number in top-right of each day shows how many people are available.</p>
+              <p className="text-xs text-muted-foreground mt-1">The number in top-right of each day shows how many people are available.</p>
             </div>
 
-            <p className="text-gray-600 mb-6">Click on a day to mark your availability. Days where everyone is available will be highlighted.</p>
+            <p className="text-muted-foreground mb-6">Click on a day to mark your availability. Days where everyone is available will be highlighted.</p>
             
             {isLoading ? (
               <div className="flex justify-center my-12">
