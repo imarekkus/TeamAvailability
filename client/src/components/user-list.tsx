@@ -72,22 +72,22 @@ export default function UserList({ users }: UserListProps) {
         <h2 className="text-xl font-semibold mb-4">Users</h2>
         <div className="space-y-2">
           {users.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">No users available</p>
+            <p className="text-gray-500 dark:text-gray-400 text-center py-4">No users available</p>
           ) : (
             users.map((user) => (
               <div
                 key={user.id}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
               >
                 <span className="font-medium">{user.username}</span>
                 <div className="flex items-center gap-3">
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
                     Available on {user.availabilityCount} {user.availabilityCount === 1 ? 'day' : 'days'}
                   </span>
                   <Button 
                     variant="ghost" 
                     size="sm"
-                    className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                    className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
                     onClick={() => setUserToDelete(user)}
                   >
                     <Trash2 className="h-4 w-4" />
